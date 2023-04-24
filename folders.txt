@@ -1,0 +1,4 @@
+./results/teapot/final_rgb
+./results/teapot/final_depth
+./results/teapot/blender_stl
+./results/teapot/blender_obj
