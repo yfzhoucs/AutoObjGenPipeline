@@ -1,3 +1,7 @@
 opencv-python
 openai
 git+https://github.com/facebookresearch/detectron2.git
+imutils
+timm
+scikit-learn
+einops
