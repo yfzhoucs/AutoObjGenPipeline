@@ -122,69 +122,69 @@ def export_obj_from_depth_and_rgb(depth_file, rgb_file, stl_folder, obj_folder, 
 
 
 
-    # bpy.ops.object.select_all(action='DESELECT')
-    # bpy.data.objects["Grid"].select_set(True)
-    # bpy.context.view_layer.objects.active = bpy.data.objects["Grid"]
-    # bpy.ops.object.mode_set(mode='EDIT')
-    # bpy.ops.mesh.fill_holes(800)
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects["Grid"].select_set(True)
+    bpy.context.view_layer.objects.active = bpy.data.objects["Grid"]
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.fill_holes(800)
 
 
-    # context = bpy.context
-    # ob = context.edit_object
-    # me = ob.data
-    # bm = bmesh.from_edit_mesh(me)
-    # for f in bm.faces:
-    #     f.select = f.calc_area() > 0.3
+    context = bpy.context
+    ob = context.edit_object
+    me = ob.data
+    bm = bmesh.from_edit_mesh(me)
+    for f in bm.faces:
+        f.select = f.calc_area() > 0.3
         
-    # bmesh.update_edit_mesh(me)
-    # bpy.ops.mesh.bridge_edge_loops()
-    # bpy.ops.object.editmode_toggle()
+    bmesh.update_edit_mesh(me)
+    bpy.ops.mesh.bridge_edge_loops()
+    bpy.ops.object.editmode_toggle()
 
         
-    # # Laplacian Smoothing
+    # Laplacian Smoothing
+    bpy.context.view_layer.objects.active = bpy.data.objects['Grid']
+    bpy.data.objects['Grid'].select_set(True)
+    bpy.ops.object.modifier_add(type='LAPLACIANSMOOTH')
+    bpy.context.object.modifiers['LaplacianSmooth'].lambda_factor = 10
+    bpy.ops.object.modifier_apply(modifier="LaplacianSmooth")
+    print(f'{object_name} added Laplacian Smoothing')
+
+
+    # # Decimate
     # bpy.context.view_layer.objects.active = bpy.data.objects['Grid']
     # bpy.data.objects['Grid'].select_set(True)
-    # bpy.ops.object.modifier_add(type='LAPLACIANSMOOTH')
-    # bpy.context.object.modifiers['LaplacianSmooth'].lambda_factor = 10
-    # bpy.ops.object.modifier_apply(modifier="LaplacianSmooth")
-    # print(f'{object_name} added Laplacian Smoothing')
+    # bpy.ops.object.modifier_add(type='DECIMATE')
+    # bpy.context.object.modifiers['Decimate'].decimate_type = 'COLLAPSE'
+    # bpy.context.object.modifiers['Decimate'].ratio = 0.1
+    # bpy.ops.object.modifier_apply(modifier="Decimate")
+    # print(f'{object_name} added Decimate')
+
+    # Select the previous plane
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects["Grid"].select_set(True)
+    bpy.context.view_layer.objects.active = bpy.data.objects["Grid"]
+
+    # Select the object
+    plane_name = "Grid"  # Replace with the name of your 3D object in Blender
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects[plane_name].select_set(True)
 
 
-    # # # Decimate
-    # # bpy.context.view_layer.objects.active = bpy.data.objects['Grid']
-    # # bpy.data.objects['Grid'].select_set(True)
-    # # bpy.ops.object.modifier_add(type='DECIMATE')
-    # # bpy.context.object.modifiers['Decimate'].decimate_type = 'COLLAPSE'
-    # # bpy.context.object.modifiers['Decimate'].ratio = 0.1
-    # # bpy.ops.object.modifier_apply(modifier="Decimate")
-    # # print(f'{object_name} added Decimate')
+    # # # Export the object as an STL file
+    # # output_path = os.path.join(stl_folder, object_name + '.stl')
+    # # print(f'{object_name} saving stl at {output_path}')
+    # # bpy.ops.export_mesh.stl(filepath=output_path, use_selection=True)
+    # # print(f'{object_name} saved stl at {output_path}')
 
-    # # Select the previous plane
-    # bpy.ops.object.select_all(action='DESELECT')
-    # bpy.data.objects["Grid"].select_set(True)
-    # bpy.context.view_layer.objects.active = bpy.data.objects["Grid"]
+    # Set the output path for the OBJ and MTL files
+    output_obj_path = os.path.join(obj_folder, object_name + ".obj")
+    output_mtl_path = os.path.join(obj_folder, object_name + ".mtl")
+    print(f'{object_name} saving obj at {output_obj_path}')
 
-    # # Select the object
-    # plane_name = "Grid"  # Replace with the name of your 3D object in Blender
-    # bpy.ops.object.select_all(action='DESELECT')
-    # bpy.data.objects[plane_name].select_set(True)
-
-
-    # # # # Export the object as an STL file
-    # # # output_path = os.path.join(stl_folder, object_name + '.stl')
-    # # # print(f'{object_name} saving stl at {output_path}')
-    # # # bpy.ops.export_mesh.stl(filepath=output_path, use_selection=True)
-    # # # print(f'{object_name} saved stl at {output_path}')
-
-    # # Set the output path for the OBJ and MTL files
-    # output_obj_path = os.path.join(obj_folder, object_name + ".obj")
-    # output_mtl_path = os.path.join(obj_folder, object_name + ".mtl")
-    # print(f'{object_name} saving obj at {output_obj_path}')
-
-    # # Export the object as an OBJ file
-    # # bpy.ops.export_scene.obj(filepath=output_obj_path, use_selection=True, use_materials=True, use_triangles=True, path_mode='AUTO')
-    # bpy.ops.export_scene.obj(filepath=output_obj_path, use_selection=True, path_mode='COPY')
-    # print(f'{object_name} saved obj at {output_obj_path}')
+    # Export the object as an OBJ file
+    # bpy.ops.export_scene.obj(filepath=output_obj_path, use_selection=True, use_materials=True, use_triangles=True, path_mode='AUTO')
+    bpy.ops.export_scene.obj(filepath=output_obj_path, use_selection=True, path_mode='COPY')
+    print(f'{object_name} saved obj at {output_obj_path}')
 
 
     # # # Exit
